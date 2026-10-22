@@ -57,7 +57,7 @@ export async function login(
   if (profile) {
     const cookiesStore = await cookies();
 
-    cookiesStore.set("user", JSON.stringify(profile), {
+    cookiesStore.set("user_profile", JSON.stringify(profile), {
       httpOnly: true,
       secure: true,
       maxAge: 60 * 60 * 24 * 30, // 30 days
