@@ -15,6 +15,7 @@ import { FieldGroup } from "@/components/ui/field";
 import {
   INITIAL_CREATE_USER_FORM,
   INITIAL_STATE_CREATE_USER,
+  ROLE_LIST,
 } from "@/constants/auth-constant";
 import {
   CreateUserForm,
@@ -26,6 +27,7 @@ import { startTransition, useActionState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createUser } from "../actions";
+import FormSelect from "@/components/common/form-select";
 
 export default function DialogCreateUser({
   onSuccess,
@@ -89,11 +91,11 @@ export default function DialogCreateUser({
               label="Email"
               placeholder="Enter your email"
             />
-            <FormInput
+            <FormSelect
               form={form}
               name="role"
               label="Role"
-              placeholder="Enter your role"
+              selectItem={ROLE_LIST}
             />
             <FormInput
               form={form}
@@ -105,7 +107,7 @@ export default function DialogCreateUser({
           </FieldGroup>
         </CardContent>
 
-        <DialogFooter>
+        <DialogFooter className="mt-4">
           <DialogClose
             render={<Button variant="outline">Cancel</Button>}
           ></DialogClose>
