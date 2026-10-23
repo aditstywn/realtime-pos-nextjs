@@ -29,6 +29,8 @@ import { toast } from "sonner";
 import { createUser } from "../actions";
 import FormSelect from "@/components/common/form-select";
 import FormImage from "@/components/common/form-image";
+import { Preview } from "@/types/general";
+import FormUser from "./form-user";
 
 export default function DialogCreateUser({
   onSuccess,
@@ -43,9 +45,7 @@ export default function DialogCreateUser({
   const [createUserState, createUserAction, isPendingCreateUser] =
     useActionState(createUser, INITIAL_STATE_CREATE_USER);
 
-  const [preview, setPreview] = useState<
-    { file: File; displayUrl: string } | undefined
-  >(undefined);
+  const [preview, setPreview] = useState<Preview | undefined>(undefined);
 
   const onSubmit = form.handleSubmit((data) => {
     const formData = new FormData();
@@ -79,63 +79,13 @@ export default function DialogCreateUser({
   }, [createUserState]);
 
   return (
-    <DialogContent className="sm:max-w-106.25">
-      <DialogHeader>
-        <DialogTitle>Create User</DialogTitle>
-        <DialogDescription>register new user to the system</DialogDescription>
-      </DialogHeader>
-      <form onSubmit={onSubmit} noValidate>
-        <CardContent>
-          <FieldGroup>
-            <FormInput
-              form={form}
-              name="name"
-              label="Name"
-              placeholder="Enter your name"
-            />
-            <FormInput
-              form={form}
-              name="email"
-              label="Email"
-              placeholder="Enter your email"
-            />
-            <FormImage
-              form={form}
-              label="Avatar"
-              name="avatar_url"
-              preview={preview}
-              setPreview={setPreview}
-            />
-            <FormSelect
-              form={form}
-              name="role"
-              label="Role"
-              selectItem={ROLE_LIST}
-            />
-            <FormInput
-              form={form}
-              name="password"
-              label="Password"
-              placeholder="Enter your password"
-              type="password"
-            />
-          </FieldGroup>
-        </CardContent>
-
-        <DialogFooter className="mt-4">
-          <DialogClose
-            render={<Button variant="outline">Cancel</Button>}
-          ></DialogClose>
-
-          <Button type="submit" disabled={isPendingCreateUser}>
-            {isPendingCreateUser ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              "Create"
-            )}
-          </Button>
-        </DialogFooter>
-      </form>
-    </DialogContent>
+    <FormUser
+      form={form}
+      onSubmit={onSubmit}
+      isLoading={isPendingCreateUser}
+      type="Create"
+      preview={preview}
+      setPreview={setPreview}
+    />
   );
 }
