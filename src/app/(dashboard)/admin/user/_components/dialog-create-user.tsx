@@ -23,11 +23,12 @@ import {
 } from "@/validations/auth-validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { startTransition, useActionState, useEffect } from "react";
+import { startTransition, useActionState, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { createUser } from "../actions";
 import FormSelect from "@/components/common/form-select";
+import FormImage from "@/components/common/form-image";
 
 export default function DialogCreateUser({
   onSuccess,
@@ -42,11 +43,18 @@ export default function DialogCreateUser({
   const [createUserState, createUserAction, isPendingCreateUser] =
     useActionState(createUser, INITIAL_STATE_CREATE_USER);
 
+  const [preview, setPreview] = useState<
+    { file: File; displayUrl: string } | undefined
+  >(undefined);
+
   const onSubmit = form.handleSubmit((data) => {
     const formData = new FormData();
 
     Object.entries(data).forEach(([key, value]) => {
-      formData.append(key, value as string);
+      formData.append(
+        key,
+        key === "avatar_url" && value instanceof File ? preview!.file : value,
+      );
     });
 
     startTransition(() => {
@@ -90,6 +98,13 @@ export default function DialogCreateUser({
               name="email"
               label="Email"
               placeholder="Enter your email"
+            />
+            <FormImage
+              form={form}
+              label="Avatar"
+              name="avatar_url"
+              preview={preview}
+              setPreview={setPreview}
             />
             <FormSelect
               form={form}

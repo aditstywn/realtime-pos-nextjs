@@ -1,16 +1,17 @@
 "use server";
 
+import { uploadFile } from "@/actions/storage-action";
 import { createClient } from "@/lib/supabase/server";
 import { AuthFormState } from "@/types/auth";
 import { createUserSchema } from "@/validations/auth-validation";
 
 export async function createUser(prevState: AuthFormState, formData: FormData) {
-  const validationFields = createUserSchema.safeParse({
+  let validationFields = createUserSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
     name: formData.get("name"),
     role: formData.get("role"),
-    // avatar_url: formData.get("avatar_url"),
+    avatar_url: formData.get("avatar_url"),
   });
 
   if (!validationFields.success) {
@@ -19,6 +20,32 @@ export async function createUser(prevState: AuthFormState, formData: FormData) {
       errors: {
         ...validationFields.error.flatten().fieldErrors,
         _form: [],
+      },
+    };
+  }
+
+  if (validationFields.data.avatar_url instanceof File) {
+    const { data, error } = await uploadFile(
+      "images",
+      "users",
+      validationFields.data.avatar_url,
+    );
+
+    if (error) {
+      return {
+        status: "error",
+        errors: {
+          ...prevState?.errors,
+          _form: [...(error._form || ["Failed to upload image"])],
+        },
+      };
+    }
+
+    validationFields = {
+      ...validationFields,
+      data: {
+        ...validationFields.data,
+        avatar_url: data?.url || "",
       },
     };
   }
@@ -32,7 +59,7 @@ export async function createUser(prevState: AuthFormState, formData: FormData) {
       data: {
         name: validationFields.data.name,
         role: validationFields.data.role,
-        // avatar_url: validationFields.data.avatar_url,
+        avatar_url: validationFields.data.avatar_url,
       },
     },
   });
