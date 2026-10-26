@@ -49,7 +49,7 @@ export async function deleteFile(bucket: string, path: string) {
   if (error) {
     return {
       status: "error",
-      error: {
+      errors: {
         _form: [error.message],
       },
     };
