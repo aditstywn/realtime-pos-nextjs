@@ -14,7 +14,8 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Table } from "@/validations/tables-validation";
 import { HEADER_TABLE_TABLE } from "@/constants/table-constant";
-import DialogCreateTable from "./dialog-create-menu";
+import DialogCreateTable from "./dialog-create-table";
+import DialogUpdateTable from "./dialog-update-table";
 
 export default function TableManagement() {
   const supabase = createClient();
@@ -163,12 +164,12 @@ export default function TableManagement() {
         currentLimit={currentLimit}
         onChangeLimit={handleChangeLimit}
       />
-      {/* <DialogUpdateMenu
+      <DialogUpdateTable
         open={selectedAction !== null && selectedAction?.type === "update"}
         onSuccess={refetch}
         currentData={selectedAction?.data}
         handleChanngeAction={handleChanngeAction}
-      /> */}
+      />
       {/* <DialogDeletemenu
         open={selectedAction !== null && selectedAction?.type === "delete"}
         onSuccess={refetch}
