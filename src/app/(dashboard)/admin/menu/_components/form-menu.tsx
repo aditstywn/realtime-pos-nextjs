@@ -73,16 +73,16 @@ export default function FormMenu<T extends FieldValues>({
               />
               <FormInput
                 form={form}
-                name={"discount" as Path<T>}
-                label="Discount"
-                placeholder="Enter your discount"
+                name={"price" as Path<T>}
+                label="Price"
+                placeholder="Enter your price"
                 type="number"
               />
               <FormInput
                 form={form}
-                name={"price" as Path<T>}
-                label="Price"
-                placeholder="Enter your price"
+                name={"discount" as Path<T>}
+                label="Discount"
+                placeholder="Enter your discount"
                 type="number"
               />
               <FormImage

@@ -12,12 +12,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Pencil, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
-import { Profile } from "@/types/auth";
 import { Menu } from "@/validations/menu-validation";
 import Image from "next/image";
 import { cn, convertIDR } from "@/lib/utils";
 import { HEADER_TABLE_MENU } from "@/constants/menu-constant";
-import DialogCreateMenu from "./dialog-create-user";
+import DialogCreateMenu from "./dialog-create-menu";
+import DialogUpdateMenu from "./dialog-update-menu";
 
 export default function MenuManagement() {
   const supabase = createClient();
@@ -170,13 +170,13 @@ export default function MenuManagement() {
         currentLimit={currentLimit}
         onChangeLimit={handleChangeLimit}
       />
-      {/* <DialogUpdateUser
+      <DialogUpdateMenu
         open={selectedAction !== null && selectedAction?.type === "update"}
         onSuccess={refetch}
         currentData={selectedAction?.data}
         handleChanngeAction={handleChanngeAction}
       />
-      <DialogDeleteUser
+      {/* <DialogDeleteUser
         open={selectedAction !== null && selectedAction?.type === "delete"}
         onSuccess={refetch}
         currentData={selectedAction?.data}
