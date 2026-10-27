@@ -18,6 +18,7 @@ import { cn, convertIDR } from "@/lib/utils";
 import { HEADER_TABLE_MENU } from "@/constants/menu-constant";
 import DialogCreateMenu from "./dialog-create-menu";
 import DialogUpdateMenu from "./dialog-update-menu";
+import DialogDeletemenu from "./dialog-delete-menu";
 
 export default function MenuManagement() {
   const supabase = createClient();
@@ -176,12 +177,12 @@ export default function MenuManagement() {
         currentData={selectedAction?.data}
         handleChanngeAction={handleChanngeAction}
       />
-      {/* <DialogDeleteUser
+      <DialogDeletemenu
         open={selectedAction !== null && selectedAction?.type === "delete"}
         onSuccess={refetch}
         currentData={selectedAction?.data}
         handleChanngeAction={handleChanngeAction}
-      /> */}
+      />
     </div>
   );
 }
