@@ -81,8 +81,8 @@ export default function DialogUpdateMenu({
         form.setValue("name", currentData.name);
         form.setValue("description", currentData.description);
         form.setValue("category", currentData.category);
-        form.setValue("price", currentData.price);
-        form.setValue("discount", currentData.discount);
+        form.setValue("price", currentData.price.toString());
+        form.setValue("discount", currentData.discount.toString());
         form.setValue("image_url", currentData.image_url);
         form.setValue(
           "is_available",

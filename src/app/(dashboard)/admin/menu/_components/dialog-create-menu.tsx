@@ -20,11 +20,7 @@ export default function DialogCreateMenu({
 }) {
   const form = useForm<MenuForm>({
     resolver: zodResolver(menuFormSchema),
-    defaultValues: {
-      ...INITIAL_CREATE_MENU,
-      price: Number(INITIAL_CREATE_MENU.price),
-      discount: Number(INITIAL_CREATE_MENU.discount),
-    },
+    defaultValues: INITIAL_CREATE_MENU,
   });
 
   const [createMenuState, createMenuAction, isPendingCreateMenu] =
