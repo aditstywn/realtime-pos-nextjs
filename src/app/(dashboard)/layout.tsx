@@ -7,13 +7,15 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 import App from "next/app";
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
 import DashboardBreadcrumb from "./_components/dashboard-breadcrumb";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <Suspense fallback={null}>
+        <AppSidebar />
+      </Suspense>
       <SidebarInset className="overflow-x-hidden">
         <header className="flex justify-between h-16 shrink-0 items-center gap-2 transition-[width, height] ease-linear group-has-data-[collapsible=icons]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
@@ -22,7 +24,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
               orientation="vertical"
               className="mr-2 data-[orientation=vertical]:h-8"
             />
-            <DashboardBreadcrumb />
+            <Suspense fallback={null}>
+              <DashboardBreadcrumb />
+            </Suspense>
           </div>
           <div className="px-4">
             <DarkModeToggle />
