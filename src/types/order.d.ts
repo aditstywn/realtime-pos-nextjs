@@ -7,3 +7,11 @@ export type OrderFormState = {
     _form?: string[];
   };
 };
+export type Cart = {
+  menu_id: string;
+  quantity: number;
+  total: number;
+  notes: string;
+  menu: Menu;
+  order_id?: string;
+};
