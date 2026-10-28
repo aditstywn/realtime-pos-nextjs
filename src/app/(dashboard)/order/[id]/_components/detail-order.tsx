@@ -35,6 +35,7 @@ export default function DetailOrder({ id }: { id: string }) {
       return result.data;
     },
     enabled: !!id,
+    refetchOnMount: "always",
   });
 
   const { data: orderMenu, isLoading: isLoadingOrderMenu } = useQuery({
@@ -54,6 +55,7 @@ export default function DetailOrder({ id }: { id: string }) {
       return result;
     },
     enabled: !!order?.id,
+    refetchOnMount: "always",
   });
 
   const filteredData = useMemo(() => {
