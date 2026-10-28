@@ -65,7 +65,7 @@ export default function AppSidebar() {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       render={
-                        <Link
+                        <a
                           href={item.url}
                           className={cn("px-4 py-3 h-auto", {
                             "bg-teal-500 text-white hover:bg-teal-500 hover:text-white":
@@ -74,7 +74,7 @@ export default function AppSidebar() {
                         >
                           {item.icon && <item.icon />}
                           <span className="capitalize">{item.title}</span>
-                        </Link>
+                        </a>
                       }
                     ></SidebarMenuButton>
                   </SidebarMenuItem>
@@ -99,7 +99,9 @@ export default function AppSidebar() {
                       alt={profile?.name || ""}
                     />
                     <AvatarFallback className="rounded-lg">
-                      {profile?.name ? profile?.name.charAt(0).toUpperCase() : "-"}
+                      {profile?.name
+                        ? profile?.name.charAt(0).toUpperCase()
+                        : "-"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="leading-tight">
@@ -129,7 +131,9 @@ export default function AppSidebar() {
                         alt={profile?.name || ""}
                       />
                       <AvatarFallback className="rounded-lg">
-                        {profile?.name ? profile?.name.charAt(0).toUpperCase() : "-"}
+                        {profile?.name
+                          ? profile?.name.charAt(0).toUpperCase()
+                          : "-"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="leading-tight">
