@@ -8,10 +8,22 @@ export const HEADER_TABLE_MENU = [
 ];
 
 export const CATEGORY_LIST = [
-  { value: "main", label: "Main" },
-  { value: "appetizer", label: "Appetizer" },
-  { value: "beverage", label: "Beverage" },
-  { value: "dessert", label: "Desserts" },
+  {
+    value: "mains",
+    label: "Mains",
+  },
+  {
+    value: "sides",
+    label: "Sides",
+  },
+  {
+    value: "desserts",
+    label: "Desserts",
+  },
+  {
+    value: "beverage",
+    label: "Beverages",
+  },
 ];
 export const AVAILABILITY_LIST = [
   { value: "true", label: "Available" },
