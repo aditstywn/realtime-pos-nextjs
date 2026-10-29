@@ -24,8 +24,10 @@ import Link from "next/link";
 import { Ban, Link2Icon, ScrollText } from "lucide-react";
 import { updateReservation } from "../actions";
 import { INITIAL_STATE_ACTION } from "@/constants/general-constant";
+import { useAuthStore } from "@/store/auth-store";
 
 export default function OrderManagement() {
+  const profile = useAuthStore((state) => state.profile);
   const supabase = createClient();
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const {
@@ -181,7 +183,7 @@ export default function OrderManagement() {
         </div>,
         <DropdownAction
           menu={
-            order.status === "reserved"
+            order.status === "reserved" && profile?.role !== "kitchen"
               ? reservedActionList.map((item) => ({
                   label: item.label,
                   action: () =>
@@ -219,19 +221,21 @@ export default function OrderManagement() {
             placeholder="Search by name or capacity"
             onChange={(e) => handleChangeSearch(e.target.value)}
           ></Input>
-          <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
-            <DialogTrigger
-              render={<Button variant="outline">Create</Button>}
-            ></DialogTrigger>
-            <DialogCreateOrder
-              onSuccess={() => {
-                setOpenCreateDialog(false);
-                refetch();
-                refetchTables();
-              }}
-              tables={tables ?? []}
-            />
-          </Dialog>
+          {profile?.role !== "kitchen" && (
+            <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
+              <DialogTrigger
+                render={<Button variant="outline">Create</Button>}
+              ></DialogTrigger>
+              <DialogCreateOrder
+                onSuccess={() => {
+                  setOpenCreateDialog(false);
+                  refetch();
+                  refetchTables();
+                }}
+                tables={tables ?? []}
+              />
+            </Dialog>
+          )}
         </div>
       </div>
 
