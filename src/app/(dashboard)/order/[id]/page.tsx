@@ -1,12 +1,15 @@
 import { Suspense } from "react";
 import DetailOrder from "./_components/detail-order";
-import { environment } from "@/configs/environment";
-import Script from "next/script";
+import MidtransScript from "./_components/midtrans-script";
 
 export const metadata = {
   title: "RAS | Detail Order ",
 };
-
+declare global {
+  interface Window {
+    snap: any;
+  }
+}
 async function DetailOrderContent({
   params,
 }: {
@@ -16,12 +19,6 @@ async function DetailOrderContent({
 
   return (
     <div className="w-full">
-      <Script
-        src={`${environment.MIDTRANS_API_URL}/snap/snap.js`}
-        data-client-key={environment.MIDTRANS_CLIENT_KEY}
-        strategy="lazyOnload"
-      />
-      ;
       <DetailOrder id={id} />
     </div>
   );
@@ -34,6 +31,8 @@ export default function DetailOrderPage({
 }) {
   return (
     <Suspense fallback={null}>
+      <MidtransScript />
+
       <DetailOrderContent params={params} />
     </Suspense>
   );

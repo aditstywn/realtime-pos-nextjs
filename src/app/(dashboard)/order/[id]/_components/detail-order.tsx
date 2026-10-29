@@ -32,7 +32,7 @@ export default function DetailOrder({ id }: { id: string }) {
     queryFn: async () => {
       const result = await supabase
         .from("orders")
-        .select("id, customer_name, status, payment_url, tables (name, id)")
+        .select("id, customer_name, status, payment_token, tables (name, id)")
         .eq("order_id", id)
         .single();
 
@@ -128,7 +128,7 @@ export default function DetailOrder({ id }: { id: string }) {
             "bg-gray-500": item.status === "pending",
             "bg-yellow-500": item.status === "process",
             "bg-blue-500": item.status === "ready",
-            "bg-green-500": item.status === "serve",
+            "bg-green-500": item.status === "served",
           })}
         >
           {item.status}
