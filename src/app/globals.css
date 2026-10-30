@@ -132,4 +132,9 @@
     -webkit-appearance: none;
     margin: 0;
   }
+
+  .react-flow__node {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
 }

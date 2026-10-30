@@ -35,6 +35,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import DialogCreateOrderTakeaway from "./dialog-create-order-takeaway";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import TableMap from "./table-map";
 
 export default function OrderManagement() {
   const profile = useAuthStore((state) => state.profile);
@@ -237,91 +239,91 @@ export default function OrderManagement() {
 
   return (
     <div className="w-full">
-      <div className="flex flex-col lg:flex-row mb-4 gap-2 justify-between w-full">
-        <h1 className="text-2xl font-semibold">Order Management</h1>
-        <div className="flex gap-2">
-          <Input
-            placeholder="Search by name or capacity"
-            onChange={(e) => handleChangeSearch(e.target.value)}
-          ></Input>
-          {profile?.role !== "kitchen" && (
-            <DropdownMenu
-              open={openCreateOrder}
-              onOpenChange={setOpenCreateOrder}
-            >
-              <DropdownMenuTrigger
-                render={<Button variant="outline">Create</Button>}
-              ></DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuGroup>
-                  <DropdownMenuLabel className="font-bold">
-                    Create Order
-                  </DropdownMenuLabel>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    setOpenCreateOrder(false);
-                    setOpenCreateDialog(true);
-                  }}
-                >
-                  <Utensils className="size-4" />
-                  Dine In
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setOpenCreateOrder(false);
-                    setOpenTakeawayDialog(true);
-                  }}
-                >
-                  <Package className="size-4" />
-                  Take Away
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-          <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
-            <DialogCreateOrderDineIn
-              onSuccess={() => {
-                refetchTables();
-              }}
-              tables={tables ?? []}
-              closeDialog={() => setOpenCreateDialog(false)}
-            />
-          </Dialog>
-          <Dialog
-            open={openTakeawayDialog}
-            onOpenChange={setOpenTakeawayDialog}
-          >
-            <DialogCreateOrderTakeaway
-              closeDialog={() => setOpenTakeawayDialog(false)}
-            />
-          </Dialog>
+      <Tabs defaultValue="list">
+        <div className="flex flex-col lg:flex-row mb-4 gap-2 justify-between w-full">
+          <h1 className="text-2xl font-semibold">Order Management</h1>
+          <TabsList>
+            <TabsTrigger value="list">Order List</TabsTrigger>
+            <TabsTrigger value="map">Table Map</TabsTrigger>
+          </TabsList>
         </div>
-      </div>
+        <TabsContent value="list">
+          <div className="flex gap-2 justify-between mb-4">
+            <Input
+              placeholder="Search by name or capacity"
+              className="max-w-75"
+              onChange={(e) => handleChangeSearch(e.target.value)}
+            ></Input>
+            {profile?.role !== "kitchen" && (
+              <DropdownMenu
+                open={openCreateOrder}
+                onOpenChange={setOpenCreateOrder}
+              >
+                <DropdownMenuTrigger
+                  render={<Button variant="outline">Create</Button>}
+                ></DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuGroup>
+                    <DropdownMenuLabel className="font-bold">
+                      Create Order
+                    </DropdownMenuLabel>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setOpenCreateOrder(false);
+                      setOpenCreateDialog(true);
+                    }}
+                  >
+                    <Utensils className="size-4" />
+                    Dine In
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setOpenCreateOrder(false);
+                      setOpenTakeawayDialog(true);
+                    }}
+                  >
+                    <Package className="size-4" />
+                    Take Away
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
+              <DialogCreateOrderDineIn
+                onSuccess={() => {
+                  refetchTables();
+                }}
+                tables={tables ?? []}
+                closeDialog={() => setOpenCreateDialog(false)}
+              />
+            </Dialog>
+            <Dialog
+              open={openTakeawayDialog}
+              onOpenChange={setOpenTakeawayDialog}
+            >
+              <DialogCreateOrderTakeaway
+                closeDialog={() => setOpenTakeawayDialog(false)}
+              />
+            </Dialog>
+          </div>
+          <DataTable
+            header={HEADER_TABLE_ORDER}
+            isLoading={isLoading}
+            data={filteredData}
+            totalPage={totalPage}
+            currentPage={currentPage}
+            onChangePage={handleChangePage}
+            currentLimit={currentLimit}
+            onChangeLimit={handleChangeLimit}
+          />
+        </TabsContent>
 
-      <DataTable
-        header={HEADER_TABLE_ORDER}
-        isLoading={isLoading}
-        data={filteredData}
-        totalPage={totalPage}
-        currentPage={currentPage}
-        onChangePage={handleChangePage}
-        currentLimit={currentLimit}
-        onChangeLimit={handleChangeLimit}
-      />
-      {/* <DialogUpdateTable
-        open={selectedAction !== null && selectedAction?.type === "update"}
-        onSuccess={refetch}
-        currentData={selectedAction?.data}
-        handleChanngeAction={handleChanngeAction}
-      /> */}
-      {/* <DialogDeleteTable
-        open={selectedAction !== null && selectedAction?.type === "delete"}
-        onSuccess={refetch}
-        currentData={selectedAction?.data}
-        handleChanngeAction={handleChanngeAction}
-      /> */}
+        <TabsContent value="map">
+          <TableMap tables={tables || []} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
