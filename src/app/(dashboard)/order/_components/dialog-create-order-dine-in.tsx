@@ -27,12 +27,14 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { CardContent } from "@/components/ui/card";
 
-export default function DialogCreateOrder({
+export default function DialogCreateOrderDineIn({
   onSuccess,
   tables,
+  closeDialog,
 }: {
   onSuccess?: () => void;
   tables?: Table[] | undefined | null;
+  closeDialog?: () => void;
 }) {
   const form = useForm<OrderForm>({
     resolver: zodResolver(orderFormSchema),
@@ -67,14 +69,14 @@ export default function DialogCreateOrder({
         description: "Create Order successfully",
       });
       form.reset();
-      onSuccess?.();
+      closeDialog?.();
     }
   }, [createOrderState]);
 
   return (
     <DialogContent className="sm:max-w-106.25 max-h-[90vh] flex flex-col">
       <DialogHeader>
-        <DialogTitle>Create Order</DialogTitle>
+        <DialogTitle>Create Order Dine In</DialogTitle>
         <DialogDescription>Add a new order from customer</DialogDescription>
       </DialogHeader>
       <form

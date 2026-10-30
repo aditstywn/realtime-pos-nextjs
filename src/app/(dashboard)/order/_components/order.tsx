@@ -3,7 +3,7 @@
 import DataTable from "@/components/common/data-table";
 import DropdownAction from "@/components/common/dropdown-action";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import useDataTable from "@/hooks/use-data-table";
 import { createClientSupabase } from "@/lib/supabase/default";
@@ -19,17 +19,26 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Table } from "@/validations/tables-validation";
 import { HEADER_TABLE_ORDER } from "@/constants/order-constant";
-import DialogCreateOrder from "./dialog-create-order";
 import Link from "next/link";
-import { Ban, Link2Icon, ScrollText } from "lucide-react";
+import { Ban, Link2Icon, Package, ScrollText, Utensils } from "lucide-react";
 import { updateReservation } from "../actions";
 import { INITIAL_STATE_ACTION } from "@/constants/general-constant";
 import { useAuthStore } from "@/store/auth-store";
+import DialogCreateOrderDineIn from "./dialog-create-order-dine-in";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import DialogCreateOrderTakeaway from "./dialog-create-order-takeaway";
 
 export default function OrderManagement() {
   const profile = useAuthStore((state) => state.profile);
   const supabase = createClientSupabase();
-  const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const {
     currentPage,
     handleChangePage,
@@ -108,17 +117,6 @@ export default function OrderManagement() {
     };
   }, []);
 
-  const [selectedAction, setSelectedAction] = useState<{
-    data: Table;
-    type: "update" | "delete";
-  } | null>();
-
-  const handleChanngeAction = (value: boolean) => {
-    if (!value) {
-      setSelectedAction(null);
-    }
-  };
-
   const totalPage = useMemo(() => {
     return orders && orders.count !== null
       ? Math.ceil(orders.count / currentLimit)
@@ -191,7 +189,7 @@ export default function OrderManagement() {
         currentLimit * (currentPage - 1) + index + 1,
         order.order_id,
         order.customer_name,
-        (order.tables as unknown as { name: string }).name,
+        (order.tables as unknown as { name: string })?.name || "Takeaway",
         <div
           className={cn("px-2 py-1 rounded-full text-white w-fit capitalize", {
             "bg-lime-600": order.status === "settled",
@@ -209,8 +207,8 @@ export default function OrderManagement() {
                   label: item.label,
                   action: () =>
                     item.action(
-                      order.id,
-                      (order.tables as unknown as { id: string }).id,
+                      order?.id,
+                      (order.tables as unknown as { id: string })?.id,
                     ),
                 }))
               : [
@@ -233,6 +231,10 @@ export default function OrderManagement() {
     });
   }, [orders]);
 
+  const [openCreateOrder, setOpenCreateOrder] = useState(false);
+  const [openCreateDialog, setOpenCreateDialog] = useState(false);
+  const [openTakeawayDialog, setOpenTakeawayDialog] = useState(false);
+
   return (
     <div className="w-full">
       <div className="flex flex-col lg:flex-row mb-4 gap-2 justify-between w-full">
@@ -243,19 +245,58 @@ export default function OrderManagement() {
             onChange={(e) => handleChangeSearch(e.target.value)}
           ></Input>
           {profile?.role !== "kitchen" && (
-            <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
-              <DialogTrigger
+            <DropdownMenu
+              open={openCreateOrder}
+              onOpenChange={setOpenCreateOrder}
+            >
+              <DropdownMenuTrigger
                 render={<Button variant="outline">Create</Button>}
-              ></DialogTrigger>
-              <DialogCreateOrder
-                onSuccess={() => {
-                  setOpenCreateDialog(false);
-                  refetchTables();
-                }}
-                tables={tables ?? []}
-              />
-            </Dialog>
+              ></DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel className="font-bold">
+                    Create Order
+                  </DropdownMenuLabel>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => {
+                    setOpenCreateOrder(false);
+                    setOpenCreateDialog(true);
+                  }}
+                >
+                  <Utensils className="size-4" />
+                  Dine In
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setOpenCreateOrder(false);
+                    setOpenTakeawayDialog(true);
+                  }}
+                >
+                  <Package className="size-4" />
+                  Take Away
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
+          <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}>
+            <DialogCreateOrderDineIn
+              onSuccess={() => {
+                refetchTables();
+              }}
+              tables={tables ?? []}
+              closeDialog={() => setOpenCreateDialog(false)}
+            />
+          </Dialog>
+          <Dialog
+            open={openTakeawayDialog}
+            onOpenChange={setOpenTakeawayDialog}
+          >
+            <DialogCreateOrderTakeaway
+              closeDialog={() => setOpenTakeawayDialog(false)}
+            />
+          </Dialog>
         </div>
       </div>
 
