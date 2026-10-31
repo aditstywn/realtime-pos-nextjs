@@ -33,6 +33,8 @@ export async function createTable(
     description: validatedFields.data.description,
     capacity: validatedFields.data.capacity,
     status: validatedFields.data.status,
+    position_x: 0,
+    position_y: 0,
   });
 
   if (error) {

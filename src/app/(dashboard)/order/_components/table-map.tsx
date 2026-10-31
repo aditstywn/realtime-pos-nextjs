@@ -24,7 +24,7 @@ export function TableNode({
         render={
           <div
             className={cn(
-              "bg-muted rounded-lg flex items-center justify-center outline-2 outline-offset-4 outline-dashed",
+              "bg-muted rounded-lg flex items-center justify-center outline-2 outline-offset-4 outline-dashed cursor-pointer",
               {
                 "w-20 h-20": data.capacity === 2,
                 "w-32 h-20": data.capacity === 4,
@@ -33,9 +33,9 @@ export function TableNode({
                 "w-64 h-20": data.capacity === 10,
               },
               {
-                "outline-amber-600": data.status === "reserved",
-                "outline-green-600": data.status === "available",
-                "outline-blue-600": data.status === "unavailable",
+                "outline-amber-600 bg-amber-200": data.status === "reserved",
+                "outline-green-600 bg-green-300": data.status === "available",
+                "outline-red-600 bg-red-300": data.status === "unavailable",
               },
             )}
           >
